@@ -24,6 +24,7 @@ const GameBoard = () => {
     const selectionCoordRef = useRef<Coordinate[]>([])
     const hoverCoordRef = useRef<Coordinate| null>(null)
     const dragStartCoord = useRef<Coordinate | null>(null);
+    const lastTouchCoord = useRef<Coordinate | null>(null);
 
     const createRow = () : string[] => {
         return Array(columns).fill(null).map((_e)=> getRandomChar());
@@ -32,22 +33,39 @@ const GameBoard = () => {
     const handleMouseDown = (x: number, y: number) => {
         setIsDragging(true);
         longPressTimer.current = true;
+        currentlyDragging.current = false;
         selectionRef.current = board[x][y] || '';
-        selectionCoordRef.current =[{x, y}]
+        selectionCoordRef.current = [{ x, y }];
         dragStartCoord.current = { x, y };
-        setSelectionString(selectionRef.current)
+        lastTouchCoord.current = { x, y }; // Initialize last touch coordinate
+        setSelectionString(selectionRef.current);
+        setLongPressedSquare({ x, y });
         const timer = setTimeout(() => {
             if (selectionRef.current.length === 1 && longPressTimer.current) {
-                console.log('we have been long pressed')
+                console.log('we have been long pressed');
                 currentlyDragging.current = true;
-                setLongPressedSquare({ x, y });
             }
-        }, 2000)
+        }, 2000);
+
+        const clearLongPress = () => {
+            clearTimeout(timer);
+            setIsDragging(false);
+            longPressTimer.current = false;
+            setLongPressedSquare(null);
+        };
+
+        window.addEventListener('mouseup', clearLongPress, { once: true });
+        window.addEventListener('touchend', clearLongPress, { once: true });
     };
+
 
     const handleMouseEnter = (x: number, y: number) => {
         hoverCoordRef.current = {x, y};
         if (isDragging) {
+            if (lastTouchCoord.current && lastTouchCoord.current.x === x && lastTouchCoord.current.y === y) {
+                return;
+            }
+            lastTouchCoord.current = { x, y }; // Update last touch coordinate
             const useX = selectionCoordRef.current![0].x
             const useY = selectionCoordRef.current![0].y
             if (y < useY) {
