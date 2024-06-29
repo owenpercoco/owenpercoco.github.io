@@ -33,19 +33,17 @@ const GameBoard = () => {
     const handleMouseDown = (x: number, y: number) => {
         setIsDragging(true);
         longPressTimer.current = true;
-        currentlyDragging.current = false;
         selectionRef.current = board[x][y] || '';
-        selectionCoordRef.current = [{ x, y }];
+        selectionCoordRef.current =[{x, y}]
         dragStartCoord.current = { x, y };
-        lastTouchCoord.current = { x, y }; // Initialize last touch coordinate
-        setSelectionString(selectionRef.current);
-        setLongPressedSquare({ x, y });
+        setSelectionString(selectionRef.current)
         const timer = setTimeout(() => {
             if (selectionRef.current.length === 1 && longPressTimer.current) {
-                console.log('we have been long pressed');
+                console.log('we have been long pressed')
                 currentlyDragging.current = true;
+                setLongPressedSquare({ x, y });
             }
-        }, 2000);
+        }, 2000)
 
         const clearLongPress = () => {
             clearTimeout(timer);
