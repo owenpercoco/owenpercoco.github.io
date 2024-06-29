@@ -167,7 +167,7 @@ const GameBoard = () => {
                             setValue={getSetPieceValue(rowIndex, cellIndex)}
                             onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
                             onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
-                            onMouseUp={() => handleMouseUp(rowIndex, cellIndex)}
+                            onMouseUp={() => handleMouseUp()}
                             isLongPressed={longPressedSquare && longPressedSquare.x === rowIndex && longPressedSquare.y === cellIndex}
                             cellIndex={cellIndex}                        
                         />

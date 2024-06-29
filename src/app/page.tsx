@@ -3,7 +3,7 @@ import GameBoard from "./components/gameboard";
 export default function Home() {
   return (
    <div className="app-container">
-      <h1>BIG WORDLE TETRIS</h1>
+      <h1>BIG WORDLE TETRIS version 1.01</h1>
       <div className="board-container">
         <GameBoard/>
       </div>
