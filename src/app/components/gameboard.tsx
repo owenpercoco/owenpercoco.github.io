@@ -161,14 +161,14 @@ const GameBoard = () => {
             {board.map((row, rowIndex) => (
                 <div key={rowIndex} className="row">
                     {row.map((cell, cellIndex) => (
-                        <Square 
+                        <Square
+                            key={cellIndex}
                             value={cell}
                             setValue={getSetPieceValue(rowIndex, cellIndex)}
                             onMouseDown={() => handleMouseDown(rowIndex, cellIndex)}
                             onMouseEnter={() => handleMouseEnter(rowIndex, cellIndex)}
-                            isLongPressed={
-                                longPressedSquare && longPressedSquare.x === rowIndex && longPressedSquare.y === cellIndex
-                            }
+                            isLongPressed={longPressedSquare && longPressedSquare.x === rowIndex && longPressedSquare.y === cellIndex}
+                            cellIndex={cellIndex}                        
                         />
                     ))}
                 </div>

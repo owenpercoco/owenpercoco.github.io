@@ -6,13 +6,14 @@ interface SquareProps {
     onMouseDown: () => void;
     onMouseEnter: () => void;
     isLongPressed: boolean | null;
+    cellIndex: number;
 }
 
 
-const Square = ({ value, setValue, onMouseDown, onMouseEnter, isLongPressed }: SquareProps) => {
+const Square = ({ value, setValue, onMouseDown, onMouseEnter, isLongPressed, cellIndex }: SquareProps) => {
 
     return (
-        <div className={`cell ${isLongPressed ? 'selected' : '' }`}
+        <div key={cellIndex} className={`cell ${isLongPressed ? 'selected' : '' }`}
             onMouseDown={(e) => {
                 e.preventDefault(); // Prevent text selection
                 onMouseDown();
