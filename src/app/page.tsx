@@ -11,7 +11,7 @@ export default function Home() {
   return (
    <div className="app-container">
       <h1>BIG WORDLE TETRIS version 1.03</h1>
-      <button type="button" onClick={() => setDebugMessage([])}>Clear Error</button>
+      {/* <button type="button" onClick={() => setDebugMessage([])}>Clear Error</button> */}
       <div className="board-container">
         <GameBoard setDebugMessage={setDebugMessage}/>
       </div>
