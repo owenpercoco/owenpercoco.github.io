@@ -2,41 +2,37 @@ import React, { Dispatch } from 'react';
 
 interface SquareProps {
     value?: string;
-    setValue: any;
-    onMouseDown: () => void;
-    onMouseEnter: () => void;
-    onMouseUp: () => void;
-    isLongPressed: boolean | null;
+    onTouchStart: () => void;
+    onTouchEnd: () => void;
+    isSelecting: boolean;
+    isSelected: boolean;
     cellIndex: number;
+    errorDisplay: (message: string, ...args: any[]) => void;
 }
 
 
-const Square = ({ value, setValue, onMouseDown, onMouseEnter, onMouseUp, isLongPressed, cellIndex }: SquareProps) => {
+const Square = ({ value, onTouchStart, onTouchEnd, isSelecting, isSelected, cellIndex, errorDisplay }: SquareProps) => {
 
     return (
-        <div key={cellIndex} className={`cell ${isLongPressed ? 'selected' : '' }`}
+        <div key={cellIndex} className={`cell ${isSelected ? 'selected' : '' } ${isSelecting ? 'selecting' : '' }`}
             onMouseDown={(e) => {
                 e.preventDefault(); // Prevent text selection
-                onMouseDown();
+                onTouchStart();
             }}
-            onMouseEnter={(e) => {
-                e.preventDefault(); // Prevent text selection
-                onMouseEnter();
+            onMouseUp={(e) => {
+                e.preventDefault()
+                onTouchEnd();
             }}
             onTouchStart={(e) => {
                 e.preventDefault()
-                onMouseDown();
+                onTouchStart();
             }} // Handle touch start
             onTouchEnd={(e) => {
                 e.preventDefault()
-                onMouseUp();
+                onTouchEnd();
             }} // Handle touch end
-            onTouchMove={(e) => {
-                e.preventDefault()
-                onMouseEnter();
-            }} // Handle touch move
         >
-            <input type="text" className="cell-input" value={value} onChange={(e) => setValue(e.target.value)}/>
+            <span className="cell-input">{value}</span>
          </div>
          );
 };
