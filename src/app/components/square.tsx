@@ -6,15 +6,16 @@ interface SquareProps {
     onTouchEnd: () => void;
     isSelecting: boolean;
     isSelected: boolean;
+    isGrey: boolean;
     cellIndex: number;
     errorDisplay: (message: string, ...args: any[]) => void;
 }
 
 
-const Square = ({ value, onTouchStart, onTouchEnd, isSelecting, isSelected, cellIndex, errorDisplay }: SquareProps) => {
+const Square = ({ value, onTouchStart, onTouchEnd, isSelecting, isSelected, isGrey, cellIndex, errorDisplay }: SquareProps) => {
 
     return (
-        <div key={cellIndex} className={`cell ${isSelected ? 'selected' : '' } ${isSelecting ? 'selecting' : '' }`}
+        <div key={cellIndex} className={`cell ${isSelected ? 'selected' : '' } ${isSelecting ? 'selecting' : '' } ${isGrey ? 'greyed-out' : '' }`}
             onMouseDown={(e) => {
                 e.preventDefault(); // Prevent text selection
                 onTouchStart();

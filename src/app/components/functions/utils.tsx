@@ -1,4 +1,3 @@
-
 const fetchWords = async (): Promise<string[]> => {
     const response = await fetch('/constants/words.txt');
     const text = await response.text();

@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 're
 import Square from './square';
 
 import { getRandomChar, isWordInGame } from './functions/utils';
-import { error } from 'console';
+
 interface Coordinate {
     x: number,
     y: number,
@@ -17,7 +17,7 @@ const GameBoard = ({ setDebugMessage } : {setDebugMessage: Dispatch<SetStateActi
             return[...prev, `${message}${args.join(',')}`]
         })
     }
-    const rows = 5;
+    const rows = 10;
     const columns = 10;
     // the main game board where play is done
     const [board, setBoard] = useState<string[][]>([]);
@@ -46,6 +46,10 @@ const GameBoard = ({ setDebugMessage } : {setDebugMessage: Dispatch<SetStateActi
         errorDisplay('in on touch end')
         setSelectingSquare(null);
         currentlySelectingSquare.current = false;
+        for (let i = 1; i < selectionCoordRef.current.length; i++) {
+            const incremental = selectionCoordRef.current[i - 1].y === selectionCoordRef.current[i].y - 1;
+            if (!incremental) return false;
+        }
         if (selectionRef.current.length > 2) {
             console.log('selectionRef', selectionRef.current);
             const result = await isWordInGame(selectionRef.current);
@@ -66,6 +70,10 @@ const GameBoard = ({ setDebugMessage } : {setDebugMessage: Dispatch<SetStateActi
             // Swap the letters
                 const { x: startX, y: startY } = selectedSquare;
                 const { x: endX, y: endY } = lastTouchCoord.current;
+                if (startX != endX) {
+                    setSelectedSquare(null);
+                    return;
+                }
                 setBoard(prevBoard => {
                     const newBoard = prevBoard.map(row => [...row]);
                     const temp = newBoard[startX][startY];
@@ -75,17 +83,19 @@ const GameBoard = ({ setDebugMessage } : {setDebugMessage: Dispatch<SetStateActi
                 });
             setSelectedSquare(null);
             setSelectingSquare(null);
+            setSelectionString('')
+            selectionCoordRef.current = []
             return
         }
         setSelectingSquare({ x, y })
-        const isAdjacent = selectionCoordRef.current.some(coord => (
-            (coord.x === x && Math.abs(coord.y - y) === 1)
+        const isInRow = selectionCoordRef.current.some(coord => (
+            (coord.x === x)
         ))
         const isInSelection = selectionCoordRef.current.some(coord => (
             (coord.x === x && coord.y === y)
         ));
     
-        if (isAdjacent && !isInSelection) {
+        if (isInRow && !isInSelection) {
             selectionCoordRef.current.push({ x, y });
             selectionCoordRef.current.sort((a, b) => a.y - b.y)
             selectionRef.current = selectionCoordRef.current.map((coord) => board[coord.x][coord.y]).join('')
@@ -101,15 +111,16 @@ const GameBoard = ({ setDebugMessage } : {setDebugMessage: Dispatch<SetStateActi
             if (currentlySelectingSquare.current) {
                 errorDisplay('we have been long pressed');
                 setSelectedSquare({ x, y });
+                setSelectingSquare(null);
             }
         }, 1000);
     
         const clearLongPress = () => {
             clearTimeout(timer);
-            setSelectedSquare(null);
         };
     
         window.addEventListener('touchend', clearLongPress, { once: true });
+        window.addEventListener('mouseup', clearLongPress, { once: true });
     };
 
 
@@ -153,6 +164,14 @@ const GameBoard = ({ setDebugMessage } : {setDebugMessage: Dispatch<SetStateActi
         setBoard(newBoard);
     }, [deleteZone]);
 
+    const shouldBeGrey = (x: number, y: number) => {
+        if (selectedSquare && selectedSquare.x != x) return true;
+        if (selectedSquare === null) {
+            return selectionCoordRef.current.some(coord => {
+                return coord.x === x && coord.y === y
+            })
+        }
+    }
     return (
         <div className="board">
             {selectionString}
@@ -166,6 +185,7 @@ const GameBoard = ({ setDebugMessage } : {setDebugMessage: Dispatch<SetStateActi
                             onTouchEnd={onTouchEnd}
                             isSelecting={selectingSquare && selectingSquare.x === rowIndex && selectingSquare.y === cellIndex || false}
                             isSelected={selectedSquare && selectedSquare.x === rowIndex && selectedSquare.y === cellIndex || false}
+                            isGrey={shouldBeGrey(rowIndex, cellIndex) || false }
                             cellIndex={cellIndex}   
                             errorDisplay={errorDisplay}                     
                         />

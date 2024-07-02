@@ -1,3 +1,11 @@
+/* 
+colors! dark to light here
+#464e47
+#568259
+#96e6b3
+#ccfccb
+#f1fffa */
+
 
 .board {
   display: flex;
@@ -23,11 +31,14 @@
 }
 
 .cell.selected {
-  background-color: blue;
+  background-color: #96e6b3;
 }
 .cell.selecting {
-  background-color: blue;
+  background-color: #ccfccb;
   transition: all 1s ease-in;
+}
+.cell.greyed-out {
+  background-color: #f1fffa;
 }
 
 .cell-input {
